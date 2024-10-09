@@ -1,13 +1,44 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + TS</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="fi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ravintolasovellus</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script type="module" src="./src/main.ts"></script>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#007BFF" />
+</head>
+
+<body>
+  <h1>Restaurants</h1>
+  <main>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Address</th>
+          <th>Company</th>
+        </tr>
+      </thead>
+      <tbody id="restaurant-table-body">
+        <!-- Ravintolat lisätään tähän TypeScriptillä -->
+      </tbody>
+    </table>
+
+    <!-- Modaali -->
+    <dialog id="restaurant-modal">
+      <div id="modal-content">
+        <!-- Ravintolan tiedot lisätään tähän TypeScriptillä -->
+      </div>
+      <button id="day">Day's menu</button>
+      <button id="week">Week's menu</button>
+      <button id="close-modal-button">Sulje</button>
+    </dialog>
+  </main>
+
+  <!-- Sijoita skripti juuri ennen </body>-tagia -->
+</body>
+
 </html>
