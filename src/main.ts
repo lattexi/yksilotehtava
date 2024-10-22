@@ -1,4 +1,4 @@
-import { errorModal, restaurantModal, restaurantRow } from './components';
+import { errorModal, restaurantModal, restaurantRow, weeklyRestaurantModal } from './components';
 import { fetchData } from './functions';
 import { apiUrl, positionOptions } from './variables';
 import { Menu, Restaurant } from './interfaces';
@@ -11,12 +11,11 @@ if (!modal || !modalContent || !closeModalButton) {
   throw new Error('Modal elements not found');
 }
 
-// Estetään modaalin sulkeutuminen klikatessa taustaa
 modal.addEventListener('cancel', (event) => {
   event.preventDefault();
+  closeModal();
 });
 
-// Sulje-napin tapahtumankuuntelija
 closeModalButton.addEventListener('click', (event) => {
   event.stopPropagation();
   closeModal();
@@ -28,6 +27,10 @@ function openModal() {
 }
 
 function closeModal() {
+  const allHighs = document.querySelectorAll('.highlight');
+  allHighs.forEach((high) => {
+    high.classList.remove('highlight');
+  });
   document.body.classList.remove('modal-open');
   modal.close();
 }
@@ -46,82 +49,68 @@ const createTable = (restaurants: Restaurant[]) => {
     tableBody.appendChild(tr);
     tr.addEventListener('click', async () => {
       try {
-        // Poistetaan aiemmat korostukset
-        const allHighs = document.querySelectorAll('.highlight');
-        allHighs.forEach((high) => {
-          high.classList.remove('highlight');
-        });
-        // Lisätään korostus
         tr.classList.add('highlight');
 
-        // Haetaan ruokalista
-        const dayMenu: Menu = await fetchData(
-          apiUrl + `/restaurants/daily/${restaurant._id}/fi`
-        );
-        console.log(dayMenu);
+        const dayMenu: Menu = await fetchData(apiUrl + `/restaurants/daily/${restaurant._id}/fi`);
 
-        // Lisätään ravintolan tiedot modaalin sisältöön
-        modalContent.innerHTML = '';
-        const menuHtml = restaurantModal(restaurant, dayMenu);
-        modalContent.innerHTML = menuHtml;
-
+        if (dayMenu && dayMenu.courses && dayMenu.courses.length > 0) {
+          modalContent.innerHTML = '';
+          const menuHtml = restaurantModal(restaurant, dayMenu);
+          modalContent.innerHTML = menuHtml;
+          console.log(dayMenu);
+        } else {
+          modalContent.innerHTML = errorModal('Menu not available.');
+        }
         openModal();
       } catch (error) {
         modalContent.innerHTML = errorModal((error as Error).message);
         openModal();
       }
 
-      // Lisätään tapahtumankuuntelijat viikon ja päivän ruokalistoille
       const weekMenuButton = document.getElementById('week') as HTMLButtonElement;
       const dayMenuButton = document.getElementById('day') as HTMLButtonElement;
-      weekMenuButton.addEventListener('click', async () => {
+
+      weekMenuButton.onclick = async () => {
         try {
-          const weekMenu: Menu = await fetchData(
-            apiUrl + `/restaurants/weekly/${restaurant._id}/fi`
-          );
+          const weekMenu = await fetchData(apiUrl + `/restaurants/weekly/${restaurant._id}/fi`);
           console.log(weekMenu);
 
-          // Lisätään ravintolan tiedot modaalin sisältöön
-          modalContent.innerHTML = '';
-          const menuHtml = restaurantModal(restaurant, weekMenu);
-          modalContent.innerHTML = menuHtml;
+          if (weekMenu && weekMenu.days && weekMenu.days.length > 0) {
+            modalContent.innerHTML = '';
+            const menuHtml = weeklyRestaurantModal(restaurant, weekMenu.days);
+            modalContent.innerHTML = menuHtml;
+          } else {
+            modalContent.innerHTML = errorModal('Weekly menu not available.');
+          }
         } catch (error) {
-          modalContent.innerHTML = errorModal((error as Error).message);
+          if (error instanceof Error) {
+            modalContent.innerHTML = errorModal(error.message);
+          } else {
+            modalContent.innerHTML = errorModal('An unknown error occurred.');
+          }
         }
-      });
+      };
 
-      dayMenuButton.addEventListener('click', async () => {
+      dayMenuButton.onclick = async () => {
         try {
-          const dayMenu: Menu = await fetchData(
-            apiUrl + `/restaurants/daily/${restaurant._id}/fi`
-          );
+          const dayMenu = await fetchData(apiUrl + `/restaurants/daily/${restaurant._id}/fi`);
           console.log(dayMenu);
 
-          // Lisätään ravintolan tiedot modaalin sisältöön
-          modalContent.innerHTML = '';
-          const menuHtml = restaurantModal(restaurant, dayMenu);
-          modalContent.innerHTML = menuHtml;
+          if (dayMenu && dayMenu.courses && dayMenu.courses.length > 0) {
+            modalContent.innerHTML = '';
+            const menuHtml = restaurantModal(restaurant, dayMenu);
+            modalContent.innerHTML = menuHtml;
+          } else {
+            modalContent.innerHTML = errorModal('Daily menu not available.');
+          }
         } catch (error) {
-          modalContent.innerHTML = errorModal((error as Error).message);
+          if (error instanceof Error) {
+            modalContent.innerHTML = errorModal(error.message);
+          } else {
+            modalContent.innerHTML = errorModal('An unknown error occurred.');
+          }
         }
-      });
-
-      weekMenuButton.addEventListener('click', async () => {
-        try {
-          const weekMenu: Menu = await fetchData(
-            apiUrl + `/restaurants/weekly/${restaurant._id}/fi`
-          );
-          console.log(weekMenu);
-
-          // Lisätään ravintolan tiedot modaalin sisältöön
-          modalContent.innerHTML = '';
-          const menuHtml = restaurantModal(restaurant, weekMenu);
-          modalContent.innerHTML = menuHtml;
-        } catch (error) {
-          modalContent.innerHTML = errorModal((error as Error).message);
-        }
-      });
-
+      };
     });
   });
 };
@@ -148,7 +137,6 @@ const success = async (pos: GeolocationPosition) => {
     });
 
     createTable(restaurants);
-
   } catch (error) {
     modalContent.innerHTML = errorModal((error as Error).message);
     openModal();
@@ -156,3 +144,24 @@ const success = async (pos: GeolocationPosition) => {
 };
 
 navigator.geolocation.getCurrentPosition(success, error, positionOptions);
+
+const themeToggle = document.getElementById('toggle-theme') as HTMLButtonElement;
+
+// Tarkista, onko käyttäjällä jo tallennettuna teema
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme) {
+  document.body.setAttribute('data-theme', savedTheme);
+}
+
+if (themeToggle) {
+  themeToggle.addEventListener('click', () => {
+    let currentTheme = document.body.getAttribute('data-theme');
+    let newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+    // Aseta uusi teema body-elementtiin
+    document.body.setAttribute('data-theme', newTheme);
+
+    // Tallenna käyttäjän valinta localStorageen
+    localStorage.setItem('theme', newTheme);
+  });
+}

@@ -57,6 +57,57 @@ const restaurantModal = (restaurant: Restaurant, menu: Menu): string => {
   return html;
 };
 
+const weeklyRestaurantModal = (restaurant: Restaurant, weeklyMenu: Menu[]): string => {
+  const { name, address, city, postalCode, phone, company } = restaurant;
+
+  let html = `
+    <h3>${name}</h3>
+    <p><strong>Company:</strong> ${company}</p>
+    <p><strong>Address:</strong> ${address}, ${postalCode} ${city}</p>
+    <p><strong>Phone:</strong> ${phone}</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Course</th>
+          <th>Diet</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+  weeklyMenu.forEach((dayMenu) => {
+    const { date, courses } = dayMenu;
+    html += `<tr><td colspan="3"><strong>${date}</strong></td></tr>`;
+
+    if (courses.length === 0) {
+      html += `
+        <tr>
+          <td colspan="3">No menu available for this day</td>
+        </tr>
+      `;
+    } else {
+      courses.forEach((course: { name: string; diets?: string; price?: string }) => {
+        const { name: courseName, diets, price } = course;
+        html += `
+          <tr>
+            <td>${courseName}</td>
+            <td>${diets ?? ' - '}</td>
+            <td>${price ?? ' - '}</td>
+          </tr>
+        `;
+      });
+    }
+  });
+
+  html += `
+      </tbody>
+    </table>
+  `;
+
+  return html;
+};
+
 const errorModal = (message: string): string => {
   const html = `
     <h3>Error</h3>
@@ -65,4 +116,4 @@ const errorModal = (message: string): string => {
   return html;
 };
 
-export { restaurantRow, restaurantModal, errorModal };
+export { restaurantRow, restaurantModal, errorModal, weeklyRestaurantModal };

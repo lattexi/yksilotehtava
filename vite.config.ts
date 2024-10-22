@@ -2,14 +2,14 @@ import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
-    base: '/~lauralek/dist/',
+    base: '/~lauralek/yksilotehtava/dist/',
     plugins: [
         VitePWA({
             manifest: {
                 name: 'Ravintolasovellus',
                 short_name: 'Ravintolat',
-                start_url: '/~lauralek/dist/',
-                scope: '/~lauralek/dist/',
+                start_url: '/~lauralek/yksilotehtava/dist/',
+                scope: '/~lauralek/yksilotehtava/dist/',
                 display: 'standalone',
                 background_color: '#ffffff',
                 theme_color: '#007BFF',

@@ -1,13 +1,33 @@
 body {
     background-color: #f0f0f0;
+    color: black;
     font-family: sans-serif;
     margin: 0;
     padding: 0;
     max-width: 1000px;
     margin: 0 auto;
+    font-family: Arial, Helvetica, sans-serif;
+    transition: 0.3s ease;
 }
 
-body.dialog-open {
+::-webkit-scrollbar {
+    display: none;
+}
+
+nav {
+    background-color: #007BFF;
+    color: #fff;
+    padding: 20px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+nav h1 {
+    margin: 0;
+    font-size: 2em;
+}
+
+body.modal-open {
     overflow: hidden;
 }
 
@@ -15,28 +35,49 @@ body.dialog-open {
 table {
     border-collapse: collapse;
     border-spacing: 0;
-    margin: 0;
+    margin: 20px 0;
     padding: 0;
     width: 100%;
-    /* Lisätty taulukon leveys */
+    table-layout: fixed;
 }
 
-th {
-    background-color: #f0f0f0;
+
+#restaurant-table-body tr:hover {
+    background-color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#lista td,
+#lista th {
     border-bottom: 1px solid #ccc;
-    font-weight: normal;
+    background-color: #f0f0f0;
     padding: 0.5em 1em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: background-color 0.3s;
+}
+
+#lista th {
+    border-bottom: 2px solid #969696;
+    background-color: #f0f0f0;
+    font-weight: normal;
     text-align: left;
 }
 
-td {
-    border-bottom: 1px solid #ccc;
-    padding: 0.5em 1em;
+#lista th:nth-child(2) {
+    width: 25%;
+}
+
+#lista th:last-child {
+    width: 15%;
 }
 
 .highlight {
     background-color: #fff;
     font-weight: bold;
+    background-color: #fff;
 }
 
 colgroup {
@@ -44,8 +85,7 @@ colgroup {
     color: #ffffff;
 }
 
-/* Modaalin tyylit */
-dialog#restaurant-modal {
+#restaurant-modal {
     width: 80%;
     max-width: 600px;
     max-height: 80vh;
@@ -54,49 +94,85 @@ dialog#restaurant-modal {
     border: none;
     border-radius: 8px;
     position: fixed;
-    /* Tarvitaan sulje-painikkeen sijoitteluun */
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    /* Kevyt varjo modaalille */
     background-color: #fff;
-    /* Varmistaa, että tausta on valkoinen */
 }
 
-dialog#restaurant-modal h3 {
+#restaurant-modal th:nth-child(2) {
+    width: 25%;
+}
+
+#restaurant-modal th:last-child {
+    width: 27%;
+}
+
+#restaurant-modal h3 {
     margin-top: 0;
+    width: 62%;
 }
 
-/* Taulukon tyylit modaalissa */
-dialog#restaurant-modal table {
+#restaurant-modal table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
 }
 
-dialog#restaurant-modal table th,
-dialog#restaurant-modal table td {
+#restaurant-modal th,
+#restaurant-modal td {
     border: 1px solid #ccc;
     padding: 8px;
     text-align: left;
 }
 
-dialog#restaurant-modal table th {
+#restaurant-modal th {
     background-color: #f0f0f0;
 }
 
-/* Sulje-painikkeen tyylit */
-#close-modal-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
+#modal-content p {
+    max-width: 60%;
 }
 
-/* Sulje-painikkeen hover-efekti */
+#week,
+#day,
+#close-modal-button {
+    border: none;
+    margin: 0;
+    padding: 10px;
+    position: absolute;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+#week {
+    right: 180px;
+    top: 10px;
+}
+
+#day {
+    right: 75px;
+    top: 10px;
+}
+
+#week:hover,
+#day:hover,
 #close-modal-button:hover {
-    color: #007BFF;
+    background-color: #007BFF;
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+#week:active,
+#day:active,
+#close-modal-button:active {
+    background-color: #0056b3;
+}
+
+
+/* Sulje-painikkeen tyylit */
+#close-modal-button {
+    top: 10px;
+    right: 10px;
 }
 
 /* Modaalin sisällön tyylit */
@@ -104,4 +180,103 @@ dialog#restaurant-modal table th {
     margin: 0.5em 0;
 }
 
+body[data-theme="dark"] {
+    background-color: #333;
+    color: #fff;
+}
+
+#toggle-theme {
+    margin-top: -40px;
+    float: right;
+    right: 10px;
+    background-color: #f0f0f0;
+    color: black;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#toggle-theme:hover {
+    background-color: #cacaca;
+    font-size: 0.9em;
+}
+
+body[data-theme="dark"] #toggle-theme {
+    background-color: #3f3f3f;
+    color: white;
+}
+
+body[data-theme="dark"] #toggle-theme:hover {
+    background-color: #2d2d2d;
+}
+
+body[data-theme="dark"] #lista th,
+body[data-theme="dark"] #lista td {
+    background-color: #333;
+    color: white;
+}
+
+body[data-theme="dark"] #restaurant-table-body tr {
+    background-color: #333;
+    color: white;
+}
+
+body[data-theme="dark"] #restaurant-table-body tr:hover {
+    background-color: #4d4d4d;
+}
+
+body[data-theme="dark"] #restaurant-modal {
+    background-color: #4e4e4e;
+    color: white;
+}
+
+body[data-theme="dark"] #restaurant-modal th {
+    background-color: #333;
+    color: white;
+}
+
+body[data-theme="dark"] #week,
+body[data-theme="dark"] #day,
+body[data-theme="dark"] #close-modal-button {
+    background-color: #3c3c3c;
+    color: white;
+}
+
+body[data-theme="dark"] #week:hover,
+body[data-theme="dark"] #day:hover,
+body[data-theme="dark"] #close-modal-button:hover {
+    background-color: #007BFF;
+}
+
 /* Media säännöt */
+@media (max-width: 768px) {
+
+    #lista th:last-child,
+    #restaurant-table-body td:last-child {
+        display: none;
+    }
+
+    #week {
+        right: 20px;
+        top: 100px;
+    }
+
+    #day {
+        right: 20px;
+        top: 55px;
+    }
+
+    #close-modal-button {
+        top: 10px;
+        right: 20px;
+    }
+}
+
+@media (max-width: 425px) {
+
+    #lista th:nth-child(2),
+    #restaurant-table-body td:nth-child(2) {
+        display: none;
+    }
+}

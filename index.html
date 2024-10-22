@@ -12,9 +12,13 @@
 </head>
 
 <body>
-  <h1>Restaurants</h1>
+  <nav>
+    <h1>Restaurants</h1>
+    <button id="toggle-theme">Toggle theme</button>
+  </nav>
+
   <main>
-    <table>
+    <table id="lista">
       <thead>
         <tr>
           <th>Name</th>
@@ -32,9 +36,9 @@
       <div id="modal-content">
         <!-- Ravintolan tiedot lisätään tähän TypeScriptillä -->
       </div>
+      <button id="close-modal-button">Sulje</button>
       <button id="day">Day's menu</button>
       <button id="week">Week's menu</button>
-      <button id="close-modal-button">Sulje</button>
     </dialog>
   </main>
 

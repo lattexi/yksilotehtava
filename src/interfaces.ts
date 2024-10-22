@@ -1,4 +1,16 @@
-interface Restaurant {
+export interface Menu {
+    date: string;
+    courses: Course[];
+}
+
+
+export interface Course {
+    name: string;
+    price: string;
+    diets?: string;
+}
+
+export interface Restaurant {
     _id: string;
     name: string;
     address: string;
@@ -7,18 +19,7 @@ interface Restaurant {
     phone: string;
     company: string;
     location: {
+        type: string;
         coordinates: [number, number];
     };
 }
-
-interface Course {
-    name: string;
-    diets: string;
-    price: number;
-}
-
-interface Menu {
-    courses: Course[]
-};
-
-export type { Restaurant, Menu };
